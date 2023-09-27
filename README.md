@@ -58,7 +58,7 @@ printf("%s\n", text);
 ```C
 // 3/4 BIT provides a color set of 8/16 colors.
 char *text = NULL;
-text = crich8V("Hello World", FOREGROUND_LIGHT_Blue, BACKGROUND_Magenta, BOLD);
+text = crich4V("Hello World", FOREGROUND_LIGHT_Blue, BACKGROUND_Magenta, BOLD);
 printf("%s\n", text);
 ```
 ##### which gives
