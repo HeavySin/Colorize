@@ -9,6 +9,7 @@
     - [Colors](#colors)
     - [Styles](#styles)
     - [Formatting](#formatting)
+    - [Notice](#notice)
         
 - [References](#references)
 
