@@ -186,9 +186,32 @@ There are quite a few styles that you can use despite the ColorScheme or method 
 
 ##### Refer to [here](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) for more styles.
 
+You can use multiple styles at once via enum flagging!
+##### Example
+```C
+crich24V("Hello World", 0xeb106f, 0x263640, BOLD | ITALIC | UNDERLINE);
+```
+
 <br>
 
 # Formatting
+
+There are also formatting functions that you can use despite the ColorScheme or method that you are using.
+They allow you to perform [**`printf`**](https://cplusplus.com/reference/cstdio/printf/) like string formatting!
+```
+crich24Vf(0xeb106f, 0x263640, 0, "name: [%s] | age: %hu", "Johan", 23);
+
+crich8Vf(199, -1, 0, "name: [%s] | age: %hu", "Johan", 23);
+
+crich4Vf(FOREGROUND_LIGHT_Blue, BACKGROUND_Magenta, BOLD, "name: [%s] | age: %hu", "Johan", 23);
+```
+The only difference is between their naming conventions which ends with 'f'.
+
+<br>
+
+# Notice
+As you may have noticed, we passed 0 for the style parameter, and every time we use any function, we have to pass all the parameters because, unfortunately, there is no `default argument` in C.
+So if you want no style at all, pass 0 (DO NOT PASS -1 OR ANYTHING ELSE) as the parameter, and for the color, pass an [`out-of-range`](#colors) Color-Code
 
 ---
 
