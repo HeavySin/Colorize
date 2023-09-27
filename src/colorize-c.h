@@ -311,12 +311,12 @@ char *color_scheme_style(const enum colorMode colorModeArg,
     return result;
 }
 
-extern inline void HideCursor(void) {
+extern inline void hidecursor(void) {
     printf("%s", ANSI_CURSOR_MANIPULATOR_HIDE);
     fflush(stdout);
 }
 
-extern inline void ShowCursor(void) {
+extern inline void showcursor(void) {
     printf("%s", ANSI_CURSOR_MANIPULATOR_SHOW);
     fflush(stdout);
 }
