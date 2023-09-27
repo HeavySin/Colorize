@@ -46,7 +46,7 @@ printf("%s\n", text);
 ```C
 // 8 BIT provides a color set of 0-255 colors.
 char *text = NULL;
-text = crich8V("Hello World", 99, 253, BOLD);
+text = crich8V("Hello World", 199, 253, BOLD);
 printf("%s\n", text);
 ```
 ##### which gives
