@@ -193,6 +193,13 @@ int unstd_vasprintf(char **restrict strp, const char *restrict fmt, va_list ap) 
     return r;
 }
 
+#define _unstd_format(var, format_str)\
+    va_list valist;\
+    va_start(valist, format_str);\
+    char *var = NULL;\
+    unstd_vasprintf(&var, format_str, valist);\
+    va_end(valist)
+
 int unstd_asprintf(char **strp, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -312,6 +319,20 @@ char *crich4V(const char *const rawMessageArg,
     return result;
 }
 
+char *crich4Vf(const short signed int foregroundColorArg,
+               const short signed int backgroundColorArg,
+               const unsigned long int stylesArg,
+               const char *const rawMessageFormatArg,
+               ...) {
+    _unstd_format(rawMessageArg, rawMessageFormatArg);
+    char *start = color_scheme_style(BIT_4, foregroundColorArg, backgroundColorArg, stylesArg);
+    char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
+    free(start);
+    free(rawMessageArg);
+    return result;
+}
+
+
 char *crich8V(const char *const rawMessageArg,
               const short signed int foregroundColorArg,
               const short signed int backgroundColorArg,
@@ -322,6 +343,20 @@ char *crich8V(const char *const rawMessageArg,
     return result;
 }
 
+
+char *crich8Vf(const short signed int foregroundColorArg,
+               const short signed int backgroundColorArg,
+               const unsigned long int stylesArg,
+               const char *const rawMessageFormatArg,
+               ...) {
+    _unstd_format(rawMessageArg, rawMessageFormatArg);
+    char *start = color_scheme_style(BIT_8, foregroundColorArg, backgroundColorArg, stylesArg);
+    char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
+    free(start);
+    free(rawMessageArg);
+    return result;
+}
+
 char *crich24V(const char *const rawMessageArg,
                const signed int foregroundColorArg,
                const signed int backgroundColorArg,
@@ -329,6 +364,20 @@ char *crich24V(const char *const rawMessageArg,
     char *start = color_scheme_style(BIT_24, foregroundColorArg, backgroundColorArg, stylesArg);
     char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
     free(start);
+    return result;
+}
+
+
+char *crich24Vf(const signed int foregroundColorArg,
+                const signed int backgroundColorArg,
+                const unsigned long int stylesArg,
+                const char *const rawMessageFormatArg,
+                ...) {
+    _unstd_format(rawMessageArg, rawMessageFormatArg);
+    char *start = color_scheme_style(BIT_24, foregroundColorArg, backgroundColorArg, stylesArg);
+    char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
+    free(start);
+    free(rawMessageArg);
     return result;
 }
 
