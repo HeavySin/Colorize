@@ -179,7 +179,7 @@ so there is no worrying about getting crashed!
 # Styles
 As you can see in here,
 
-https://github.com/HeavySin/Colorize/blob/16ca987ecb9c1fbeb159e493b6a23ea7a2e47e8b/src/colorize.hpp#L55-L67
+https://github.com/HeavySin/Colorize-C/blob/9ea5c1fa0b68bb1a61727fb80735fbc671b1532e/src/colorize-c.h#L44-L60
 
 There are quite a few styles that you can use despite the ColorScheme or method that you are using.
 
