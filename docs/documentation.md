@@ -106,7 +106,7 @@ This coloring scheme is supported on systems since 1980s so, yours mostly suppor
 
 <br>
 
-### 3/4 BIT <sup>16 <sup>[**1**](https://github.com/HeavySin/Colorize/blob/16ca987ecb9c1fbeb159e493b6a23ea7a2e47e8b/src/colorize.hpp#L70-L114), [**2**](#34-bit)</sup></sup>
+### 3/4 BIT <sup>16 <sup>[**1**](https://github.com/HeavySin/Colorize-C/blob/0c1a34edef38fa2b2aa9b7587f19ec3e69ea44c1/src/colorize-c.h#L63-L111), [**2**](#34-bit)</sup></sup>
 
 - #### Use by value
   ```CPP
