@@ -198,7 +198,7 @@ crich24V("Hello World", 0xeb106f, 0x263640, BOLD | ITALIC | UNDERLINE);
 
 There are also formatting functions that you can use despite the ColorScheme or method that you are using.
 They allow you to perform [**`printf`**](https://cplusplus.com/reference/cstdio/printf/) like string formatting!
-```
+```C
 crich24Vf(0xeb106f, 0x263640, 0, "name: [%s] | age: %hu", "Johan", 23);
 
 crich8Vf(199, -1, 0, "name: [%s] | age: %hu", "Johan", 23);
