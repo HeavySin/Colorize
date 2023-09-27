@@ -3,7 +3,6 @@
 
 #if  defined(__WIN32) || defined(__WIN64)
 #define _SHITDOWS
-#include <stdio.h>
 #endif
 
 #include <stdbool.h>
@@ -11,6 +10,7 @@
 #include <string.h>
 //#include <math.h>
 #include <stdarg.h>
+#include <stdio.h>
 
 // Referenced form https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters
 enum colorState
@@ -150,8 +150,10 @@ bool is_valid_color(const enum colorMode colorModeArg, const signed int colorCod
 const static char ANSI_DELIMITER = ';';
 const static char ANSI_CURSOR_MANIPULATOR_DELIMITER = '?';
 const static char ANSI_ESCAPE_SEQUENCE = '\033';
-const static char ANSI_ESCAPE_SEQUENCE_STRING[] = {"\033["};
-const static char ANSI_RESET[] = "\033[0m";
+const static char *ANSI_ESCAPE_SEQUENCE_STRING = "\033[";
+const static char *ANSI_RESET = "\033[0m";
+const static char *ANSI_CURSOR_MANIPULATOR_HIDE = "\033[?25l";
+const static char *ANSI_CURSOR_MANIPULATOR_SHOW = "\033[?25h";
 
 //extern signed int get_length_in_string_int32(const signed int value) {
 //    return (value == 0 ? 1 : (int) (log10(value) + 1));
@@ -307,6 +309,16 @@ char *color_scheme_style(const enum colorMode colorModeArg,
     free(foregroundStartTemp);
     free(backgroundStartTemp);
     return result;
+}
+
+extern inline void HideCursor(void) {
+    printf("%s", ANSI_CURSOR_MANIPULATOR_HIDE);
+    fflush(stdout);
+}
+
+extern inline void ShowCursor(void) {
+    printf("%s", ANSI_CURSOR_MANIPULATOR_SHOW);
+    fflush(stdout);
 }
 
 char *crich4V(const char *const rawMessageArg,
