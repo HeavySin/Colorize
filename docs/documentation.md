@@ -213,6 +213,8 @@ The only difference is between their naming conventions which ends with 'f'.
 As you may have noticed, we passed 0 for the style parameter, and every time we use any function, we have to pass all the parameters because, unfortunately, there is no `default argument` in C.
 So if you want no style at all, pass 0 (DO NOT PASS -1 OR ANYTHING ELSE) as the parameter, and for the color, pass an [`out-of-range`](#colors) Color-Code
 
+<br>
+
 ---
 
 # References
