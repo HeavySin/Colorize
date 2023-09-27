@@ -8,6 +8,7 @@
       - [Reference](#use-by-reference)
     - [Colors](#colors)
     - [Styles](#styles)
+    - [Formatting](#formatting)
         
 - [References](#references)
 
@@ -70,7 +71,7 @@ This coloring scheme is supported on systems since 1980s so, yours mostly suppor
   char *text = NULL;
   
   text = crich24V(
-              "Hello World",
+              "Hello World" /* Text : const char *const */,
               0xeb106f /* Foreground-Color : Hex */,
               0x263640 /* Background-Color : Hex */,
               BOLD /* Styles : enum emphasis */
@@ -93,7 +94,7 @@ This coloring scheme is supported on systems since 1980s so, yours mostly suppor
   char *text = NULL;
 
   text = crich8V(
-              "Hello World" /* Text : std::string */,
+              "Hello World" /* Text : const char *const */,
               199 /* Foreground-Color : ColorCode */,
               253 /* Background-Color : ColorCode */,
               BOLD /* Styles : enum emphasis */
@@ -116,9 +117,9 @@ This coloring scheme is supported on systems since 1980s so, yours mostly suppor
   char *text = NULL;
   
   text = crich4V(
-              "Hello World" /* Text : std::string */,
-              FOREGROUND_LIGHT_Blue /* Foreground-Color : BIT_4_COLORS */,
-              BACKGROUND_Magenta /* Background-Color : BIT_4_COLORS */,
+              "Hello World" /* Text : const char *const */,
+              FOREGROUND_LIGHT_Blue /* Foreground-Color : enum BIT_4_COLORS */,
+              BACKGROUND_Magenta /* Background-Color : enum BIT_4_COLORS */,
               BOLD /* Styles : enum emphasis */
   );
   
@@ -186,6 +187,8 @@ There are quite a few styles that you can use despite the ColorScheme or method 
 ##### Refer to [here](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters) for more styles.
 
 <br>
+
+# Formatting
 
 ---
 
