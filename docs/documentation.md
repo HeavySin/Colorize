@@ -60,48 +60,23 @@ This coloring scheme is supported on systems since 1980s so, yours mostly suppor
 ### 24 BIT <sup>[TrueColor](#24-bit-or-true-color)</sup>
 
 - #### Use by value
-  ```CPP
-  std::cout << Colorize::rich24V<0xeb106f, 0x263640>("Hello World", {Colorizer::emphasis::BOLD}) << std::endl;
+  ```C
+  char *text = NULL;
+  text = crich24V("Hello World", 0xeb106f, 0x263640, BOLD);
+  printf("%s\n", text);
   ```
-  ```CPP
-  std::cout <<
-  
-    Colorize::rich24V<
-              0xeb106f /* Foreground-Color : Hex */,
-              0x263640 /* Background-Color : Hex */
-              >
-            (
-              "Hello World" /* Text : std::string */,
-              {
-                  // Styles : Colorizer::emphasis
-                  Colorizer::emphasis::BOLD
-              }
-            )
-  
-  << std::endl;
-  ```
+  ```C
 
-- #### Use by reference
-  ```CPP
-  std::cout << Colorize::rich24R("Hello World", 0xeb106f, 0x263640, {Colorizer::emphasis::BOLD}) << std::endl;
-  ```
-  ```CPP
-  std::cout <<
+  char *text = NULL;
   
-    Colorize::rich24R
-            (
-              "Hello World" /* Text : std::string */,
-  
+  text = crich24V(
+              "Hello World",
               0xeb106f /* Foreground-Color : Hex */,
-              0x263640 /* Background-Color : Hex */
+              0x263640 /* Background-Color : Hex */,
+              BOLD /* Styles : enum emphasis */
+  );
   
-              {
-                  // Styles : Colorizer::emphasis
-                  Colorizer::emphasis::BOLD
-              }
-            )
-  
-  << std::endl;
+  printf("%s\n", text);
   ```
 
 <br>
@@ -109,48 +84,22 @@ This coloring scheme is supported on systems since 1980s so, yours mostly suppor
 ### 8 BIT <sup>[0-255](#8-bit)</sup>
 
 - #### Use by value
-  ```CPP
-  std::cout << Colorize::rich8V<199, 253>("Hello World", {Colorizer::emphasis::BOLD}) << std::endl;
+  ```C
+  char *text = NULL;
+  text = crich8V("Hello World", 199, 253, BOLD);
+  printf("%s\n", text);
   ```
-  ```CPP
-  std::cout <<
-  
-    Colorize::rich8V<
-              199 /* Foreground-Color : ColorCode */,
-              253 /* Background-Color : ColorCode */
-              >
-            (
-              "Hello World" /* Text : std::string */,
-              {
-                  // Styles : Colorizer::emphasis
-                  Colorizer::emphasis::BOLD
-              }
-            )
-  
-  << std::endl;
-  ```
+  ```C
+  char *text = NULL;
 
-- #### Use by reference
-  ```CPP
-  std::cout << Colorize::rich8R("Hello World", 199, 253, {Colorizer::emphasis::BOLD}) << std::endl;
-  ```
-  ```CPP
-  std::cout <<
-  
-    Colorize::rich8R
-            (
+  text = crich8V(
               "Hello World" /* Text : std::string */,
-  
               199 /* Foreground-Color : ColorCode */,
-              253 /* Background-Color : ColorCode */
-  
-              {
-                  // Styles : Colorizer::emphasis
-                  Colorizer::emphasis::BOLD
-              }
-            )
-  
-  << std::endl;
+              253 /* Background-Color : ColorCode */,
+              BOLD /* Styles : enum emphasis */
+  );
+
+  printf("%s\n", text);
   ```
 
 <br>
@@ -159,47 +108,21 @@ This coloring scheme is supported on systems since 1980s so, yours mostly suppor
 
 - #### Use by value
   ```CPP
-  std::cout << Colorize::rich4V<Colorizer::BIT_4_COLORS::FOREGROUND_LIGHT_Blue, Colorizer::BIT_4_COLORS::BACKGROUND_Magenta>("Hello World", {Colorizer::emphasis::BOLD}) << std::endl;
+  char *text = NULL;
+  text = crich4V("Hello World", FOREGROUND_LIGHT_Blue, BACKGROUND_Magenta, BOLD);
+  printf("%s\n", text);
   ```
   ```CPP
-  std::cout <<
+  char *text = NULL;
   
-    Colorize::rich4V<
-              Colorizer::BIT_4_COLORS::FOREGROUND_LIGHT_Blue /* Foreground-Color : BIT_4_COLORS */,
-              Colorizer::BIT_4_COLORS::BACKGROUND_Magenta /* Background-Color : BIT_4_COLORS */
-              >
-            (
+  text = crich4V(
               "Hello World" /* Text : std::string */,
-              {
-                  // Styles : Colorizer::emphasis
-                  Colorizer::emphasis::BOLD
-              }
-            )
+              FOREGROUND_LIGHT_Blue /* Foreground-Color : BIT_4_COLORS */,
+              BACKGROUND_Magenta /* Background-Color : BIT_4_COLORS */,
+              BOLD /* Styles : enum emphasis */
+  );
   
-  << std::endl;
-  ```
-
-- #### Use by reference
-  ```CPP
-  std::cout << Colorize::rich4R("Hello World", Colorizer::BIT_4_COLORS::FOREGROUND_LIGHT_Blue, Colorizer::BIT_4_COLORS::BACKGROUND_Magenta, {Colorizer::emphasis::BOLD}) << std::endl;
-  ```
-  ```CPP
-  std::cout <<
-  
-    Colorize::rich4R
-            (
-              "Hello World" /* Text : std::string */,
-  
-              Colorizer::BIT_4_COLORS::FOREGROUND_LIGHT_Blue /* Foreground-Color : BIT_4_COLORS */,
-              Colorizer::BIT_4_COLORS::BACKGROUND_Magenta /* Background-Color : BIT_4_COLORS */
-  
-              {
-                  // Styles : Colorizer::emphasis
-                  Colorizer::emphasis::BOLD
-              }
-            )
-  
-  << std::endl;
+  printf("%s\n", text);
   ```
 
 ***
@@ -207,59 +130,48 @@ This coloring scheme is supported on systems since 1980s so, yours mostly suppor
 ## Use by value
 These functions **✖ cannot** take their Color parameters as a reference.
 ##### Examples:
-```CPP
+```C
 // Wrong ❌
 int foregroundColor = 0xeb106f;
 int backgroundColor = 0x263640;
 
-std::cout << Colorize::rich24V<foregroundColor, backgroundColor>("Hello World") << std::endl;
+crich24V("Hello World", foregroundColor, backgroundColor);
 ```
-```CPP
+```C
 // Correct ✅
-std::cout << Colorize::rich24V<0xeb106f, 0x263640>("Hello World") << std::endl;
+rich24V("Hello World", 0xeb106f, 0x263640);
 ```
 
 ## Use by reference
 These functions **✔ can** take their Color parameters as a reference.
-##### Examples:
-```CPP
-// Correct ✅
-int foregroundColor = 0xeb106f;
-int backgroundColor = 0x263640;
-
-std::cout << Colorize::rich24R("Hello World", foregroundColor, backgroundColor) << std::endl;
-```
-```CPP
-// Correct ✅
-std::cout << Colorize::rich24R("Hello World", 0xeb106f, 0x263640) << std::endl;
-```
+###### Not implemented. Since it's much faster to pass int by value instead of reference.
 
 As you might be noticed, the only difference between the **Use by Value and Reference** is in the way that they get their parameters.
 
 # Colors
 You can use different ranges of colors, contrary to the intended function.
 
-|                   |   Colorize::rich4   |   Colorize::rich8   |       Colorize::rich24       |
-|       :---:       |        :---:        |        :---:        |             :---:            |
+|                   |   crich4   |   crich8   |   crich24   |
+|       :---:       |    :---:   |    :---:   |    :---:    |
 |  **Color-Range**  | `0` through `15` <sup>&#8226; **See** [**1**](https://github.com/HeavySin/Colorize/blob/16ca987ecb9c1fbeb159e493b6a23ea7a2e47e8b/src/colorize.hpp#L70-L114), [**2**](#34-bit)</sup> | `0` through `255` <sup>&#8226; **See** [**1**](#8-bit)</sup>  | `#000000` through `#ffffff` <sup>&#8226; **See** [**1**](#24-bit-or-true-color)</sup>  |
 |   **No-Color**    | `≤ -1` | `≤ -1` or `255 <` | `≤ -1` or `#ffffff <`      |
 
 Let's say you just want to add a *Background Color* and you want the *Foreground Color* to be nothing (or rather unchanged).
 You'll just have to use an `out-of-range` Color-Code as mentioned in the table, **like**:
-```CPP
-std::cout << Colorize::rich24V<-1, 0x263640>("Hello World") << std::endl;
+```C
+crich24V("Hello World", -1, 0x263640);
 
 // or
-std::cout << Colorize::rich24V<0xeb106f, -1>("Hello World") << std::endl;
+crich24V("Hello World", 0xeb106f, -1);
 
 // or
-std::cout << Colorize::rich8V<256, 253>("Hello World") << std::endl;
+crich8V("Hello World", 256, 253);
 
 // or
-std::cout << Colorize::rich8V<199, -1>("Hello World") << std::endl;
+crich8V("Hello World", 199, -1);
 
 // or even
-std::cout << Colorize::rich8V<923, -3247>("Hello World") << std::endl;
+crich8V("Hello World", 923, -3247);
 ```
 
 so there is no worrying about getting crashed!
