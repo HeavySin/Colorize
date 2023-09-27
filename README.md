@@ -70,4 +70,4 @@ printf("%s\n", text);
 # Installation
 Since it's **Header-Only**,
 <br>
-Just copy and paste [**`colorize-c.h`**](/src/colorize-c.hpp) next to your **Project/Path** (`e.g. /usr/local/include/ on linux`)
+Just copy and paste [**`colorize-c.h`**](/src/colorize-c.h) next to your **Project/Path** (`e.g. /usr/local/include/ on linux`)
