@@ -113,17 +113,16 @@ enum BIT_4_COLORS
 const static unsigned int ANSI_MAX_COLOR_SIZE = 255;
 
 typedef struct {
-    short unsigned int R;
-    short unsigned int G;
-    short unsigned int B;
+    union {
+        short unsigned int R;
+        short unsigned int G;
+        short unsigned int B;
+        short unsigned int O;
+    };
+
+    unsigned int HEX;
 } RGB_CONTAINER;
 
-#define INIT_RGB_CONTAINER(X, hexValueArg)\
-RGB_CONTAINER X = {\
-.R = (hexValueArg >= 0 ? (((hexValueArg >> 16) & 0xFF)) : 256),\
-.G = (hexValueArg >= 0 ? (((hexValueArg >> 8) & 0xFF)) : 256),\
-.B = (hexValueArg >= 0 ? (((hexValueArg) & 0xFF)) : 256)\
-}
 
 bool is_valid_color(const enum colorMode colorModeArg, const signed int colorCodeArg) {
     switch (colorModeArg) {
@@ -136,7 +135,7 @@ bool is_valid_color(const enum colorMode colorModeArg, const signed int colorCod
         case BIT_8:
             return colorCodeArg >= 0 && colorCodeArg <= ANSI_MAX_COLOR_SIZE;
         case BIT_24: {
-            INIT_RGB_CONTAINER(colorCodeHolder, colorCodeArg);
+            RGB_CONTAINER colorCodeHolder = {.HEX = colorCodeArg};
             return (colorCodeHolder.R >= 0 && colorCodeHolder.R <= 0xFF) &&
                    (colorCodeHolder.G >= 0 && colorCodeHolder.G <= 0xFF) &&
                    (colorCodeHolder.B >= 0 && colorCodeHolder.B <= 0xFF);
@@ -155,22 +154,6 @@ const static char *ANSI_RESET = "\033[0m";
 const static char *ANSI_CURSOR_MANIPULATOR_HIDE = "\033[?25l";
 const static char *ANSI_CURSOR_MANIPULATOR_SHOW = "\033[?25h";
 
-//extern signed int get_length_in_string_int32(const signed int value) {
-//    return (value == 0 ? 1 : (int) (log10(value) + 1));
-//}
-//
-//extern signed int get_size_in_string_int32_in_bytes(const signed int value) {
-//    return get_length_in_string_int32(value) * (signed int) sizeof(signed int);
-//}
-
-char *unstdstrcat(char *a, char *b) {
-    char *p, *q, *rtn;
-    rtn = q = malloc(strlen(a) + strlen(b) + 1);
-    for (p = a; (*q = *p) != '\0'; ++p, ++q) {}
-    for (p = b; (*q = *p) != '\0'; ++p, ++q) {}
-    return rtn;
-}
-
 
 int unstd_vscprintf(const char *restrict format, va_list pargs) {
     va_list argcopy;
@@ -180,7 +163,7 @@ int unstd_vscprintf(const char *restrict format, va_list pargs) {
     return result;
 }
 
-int unstd_vasprintf(char **restrict strp, const char *restrict fmt, va_list ap) {
+int _____unstd_vasprintf(char **restrict strp, const char *restrict fmt, va_list ap) {
     int len = unstd_vscprintf(fmt, ap);
     if (len == -1) { return -1; }
     size_t size = (size_t) len + 1;
@@ -195,38 +178,36 @@ int unstd_vasprintf(char **restrict strp, const char *restrict fmt, va_list ap) 
     return r;
 }
 
-#define _unstd_format(var, format_str)\
+#define _____unstd_format(var, format_str)\
     va_list valist;\
     va_start(valist, format_str);\
     char *var = NULL;\
-    unstd_vasprintf(&var, format_str, valist);\
+    _____unstd_vasprintf(&var, format_str, valist);\
     va_end(valist)
 
-int unstd_asprintf(char **strp, const char *fmt, ...) {
+int _____unstd_asprintf(char **strp, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    int r = unstd_vasprintf(strp, fmt, ap);
+    int r = _____unstd_vasprintf(strp, fmt, ap);
     va_end(ap);
     return r;
 }
 
-char *unstd_inplace_asprintf(const char *fmt, ...) {
+char *_____unstd_inplace_asprintf(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     char *temp = NULL;
-    unstd_vasprintf(&temp, fmt, ap);
+    _____unstd_vasprintf(&temp, fmt, ap);
     va_end(ap);
     return temp;
 }
 
 char *RGBToANSI(const signed int colorCodeArg) {
-    INIT_RGB_CONTAINER(hexColorArg, colorCodeArg);
-    return unstd_inplace_asprintf("%d%c%d%c%d",
-                                  hexColorArg.R,
-                                  ANSI_DELIMITER,
-                                  hexColorArg.G,
-                                  ANSI_DELIMITER,
-                                  hexColorArg.B);
+    RGB_CONTAINER hexColorArg = {.HEX = colorCodeArg};
+    return _____unstd_inplace_asprintf("%d;%d;%d",
+                                       hexColorArg.R,
+                                       hexColorArg.G,
+                                       hexColorArg.B);
 }
 
 char *color_scheme_style(const enum colorMode colorModeArg,
@@ -238,52 +219,52 @@ char *color_scheme_style(const enum colorMode colorModeArg,
 
     char *backgroundStartTemp = NULL;
     if (backgroundColorState && BIT_4 != colorModeArg) {
-        unstd_asprintf(&backgroundStartTemp, "%s", ANSI_ESCAPE_SEQUENCE_STRING);
+        _____unstd_asprintf(&backgroundStartTemp, "%s", ANSI_ESCAPE_SEQUENCE_STRING);
     }
 
     char *foregroundStartTemp = NULL;
     if (foregroundColorState || stylesArg) {
-        unstd_asprintf(&foregroundStartTemp, "%s", ANSI_ESCAPE_SEQUENCE_STRING);
+        _____unstd_asprintf(&foregroundStartTemp, "%s", ANSI_ESCAPE_SEQUENCE_STRING);
     }
 
     if (BIT_4 == colorModeArg) {
         if (backgroundColorState) {
-            unstd_asprintf(&foregroundStartTemp, "%s%d;", foregroundStartTemp, backgroundColorArg);
+            _____unstd_asprintf(&foregroundStartTemp, "%s%d;", foregroundStartTemp, backgroundColorArg);
         }
         if (foregroundColorState) {
-            unstd_asprintf(&foregroundStartTemp, "%s%d;", foregroundStartTemp, foregroundColorArg);
+            _____unstd_asprintf(&foregroundStartTemp, "%s%d;", foregroundStartTemp, foregroundColorArg);
         }
     } else {
         if (backgroundColorState) {
             char *backgroundColorAsX =
                     BIT_8 == colorModeArg
-                    ? unstd_inplace_asprintf("%d", backgroundColorArg)
+                    ? _____unstd_inplace_asprintf("%d", backgroundColorArg)
                     : RGBToANSI(backgroundColorArg);
-            unstd_asprintf(&backgroundStartTemp,
-                           "%s%d%c%d%c%s%c",
-                           backgroundStartTemp,
-                           Background,
-                           ANSI_DELIMITER,
-                           colorModeArg,
-                           ANSI_DELIMITER,
-                           backgroundColorAsX,
-                           'm');
+            _____unstd_asprintf(&backgroundStartTemp,
+                                "%s%d%c%d%c%s%c",
+                                backgroundStartTemp,
+                                Background,
+                                ANSI_DELIMITER,
+                                colorModeArg,
+                                ANSI_DELIMITER,
+                                backgroundColorAsX,
+                                'm');
             free(backgroundColorAsX);
         }
         if (foregroundColorState) {
             char *foregroundColorAsX =
                     BIT_8 == colorModeArg
-                    ? unstd_inplace_asprintf("%d", foregroundColorArg)
+                    ? _____unstd_inplace_asprintf("%d", foregroundColorArg)
                     : RGBToANSI(foregroundColorArg);
-            unstd_asprintf(&foregroundStartTemp,
-                           "%s%d%c%d%c%s%c",
-                           foregroundStartTemp,
-                           Foreground,
-                           ANSI_DELIMITER,
-                           colorModeArg,
-                           ANSI_DELIMITER,
-                           foregroundColorAsX,
-                           ANSI_DELIMITER);
+            _____unstd_asprintf(&foregroundStartTemp,
+                                "%s%d%c%d%c%s%c",
+                                foregroundStartTemp,
+                                Foreground,
+                                ANSI_DELIMITER,
+                                colorModeArg,
+                                ANSI_DELIMITER,
+                                foregroundColorAsX,
+                                ANSI_DELIMITER);
             free(foregroundColorAsX);
         }
     }
@@ -291,7 +272,7 @@ char *color_scheme_style(const enum colorMode colorModeArg,
     if (stylesArg) {
         for (signed int i = 1, b = 1; i >= 0; i <<= 1, ++b) {
             if (stylesArg & i) {
-                unstd_asprintf(&foregroundStartTemp, "%s%d%c", foregroundStartTemp, b, ';');
+                _____unstd_asprintf(&foregroundStartTemp, "%s%d%c", foregroundStartTemp, b, ';');
             }
         }
     }
@@ -301,7 +282,7 @@ char *color_scheme_style(const enum colorMode colorModeArg,
         foregroundStartTemp[strlen(foregroundStartTemp) - 1] = 'm';
     }
 
-    char *result = unstd_inplace_asprintf(
+    char *result = _____unstd_inplace_asprintf(
             "%s%s",
             !backgroundStartTemp ? "" : backgroundStartTemp,
             !foregroundStartTemp ? "" : foregroundStartTemp);
@@ -311,12 +292,12 @@ char *color_scheme_style(const enum colorMode colorModeArg,
     return result;
 }
 
-extern inline void hidecursor(void) {
+extern inline void HideCursor(void) {
     printf("%s", ANSI_CURSOR_MANIPULATOR_HIDE);
     fflush(stdout);
 }
 
-extern inline void showcursor(void) {
+extern inline void ShowCursor(void) {
     printf("%s", ANSI_CURSOR_MANIPULATOR_SHOW);
     fflush(stdout);
 }
@@ -326,7 +307,7 @@ char *crich4V(const char *const rawMessageArg,
               const short signed int backgroundColorArg,
               const unsigned long int stylesArg) {
     char *start = color_scheme_style(BIT_4, foregroundColorArg, backgroundColorArg, stylesArg);
-    char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
+    char *result = _____unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
     free(start);
     return result;
 }
@@ -336,9 +317,9 @@ char *crich4Vf(const short signed int foregroundColorArg,
                const unsigned long int stylesArg,
                const char *const rawMessageFormatArg,
                ...) {
-    _unstd_format(rawMessageArg, rawMessageFormatArg);
+    _____unstd_format(rawMessageArg, rawMessageFormatArg);
     char *start = color_scheme_style(BIT_4, foregroundColorArg, backgroundColorArg, stylesArg);
-    char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
+    char *result = _____unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
     free(start);
     free(rawMessageArg);
     return result;
@@ -350,7 +331,7 @@ char *crich8V(const char *const rawMessageArg,
               const short signed int backgroundColorArg,
               const unsigned long int stylesArg) {
     char *start = color_scheme_style(BIT_8, foregroundColorArg, backgroundColorArg, stylesArg);
-    char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
+    char *result = _____unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
     free(start);
     return result;
 }
@@ -361,9 +342,9 @@ char *crich8Vf(const short signed int foregroundColorArg,
                const unsigned long int stylesArg,
                const char *const rawMessageFormatArg,
                ...) {
-    _unstd_format(rawMessageArg, rawMessageFormatArg);
+    _____unstd_format(rawMessageArg, rawMessageFormatArg);
     char *start = color_scheme_style(BIT_8, foregroundColorArg, backgroundColorArg, stylesArg);
-    char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
+    char *result = _____unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
     free(start);
     free(rawMessageArg);
     return result;
@@ -374,7 +355,7 @@ char *crich24V(const char *const rawMessageArg,
                const signed int backgroundColorArg,
                const unsigned long int stylesArg) {
     char *start = color_scheme_style(BIT_24, foregroundColorArg, backgroundColorArg, stylesArg);
-    char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
+    char *result = _____unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
     free(start);
     return result;
 }
@@ -385,9 +366,9 @@ char *crich24Vf(const signed int foregroundColorArg,
                 const unsigned long int stylesArg,
                 const char *const rawMessageFormatArg,
                 ...) {
-    _unstd_format(rawMessageArg, rawMessageFormatArg);
+    _____unstd_format(rawMessageArg, rawMessageFormatArg);
     char *start = color_scheme_style(BIT_24, foregroundColorArg, backgroundColorArg, stylesArg);
-    char *result = unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
+    char *result = _____unstd_inplace_asprintf("%s%s%s", start, rawMessageArg, ANSI_RESET);
     free(start);
     free(rawMessageArg);
     return result;
