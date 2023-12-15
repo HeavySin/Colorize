@@ -137,11 +137,11 @@ These functions **✖ cannot** take their Color parameters as a reference.
 int foregroundColor = 0xeb106f;
 int backgroundColor = 0x263640;
 
-crich24V("Hello World", foregroundColor, backgroundColor);
+crich24V("Hello World", &foregroundColor, &backgroundColor);
 ```
 ```C
 // Correct ✅
-rich24V("Hello World", 0xeb106f, 0x263640);
+сrich24V("Hello World", 0xeb106f, 0x263640);
 ```
 
 ## Use by reference
